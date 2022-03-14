@@ -44,7 +44,7 @@ const products = [
     {name: '핸드폰케이스',price:15000},
     {name: '후드티',price:30000},
     {name: '바지',price:25000},
-] 
+]  
 
 const go = (...args) =>{
     fx.reduce((acc,f)=> f(acc),args);  //f(acc)때 두번째 실행?
