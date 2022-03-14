@@ -24,3 +24,5 @@ const map = (f,iter)=>{
 
 console.log(map(a=> a.name ,products));
 console.log(map(a=> a.price ,products));
+
+
