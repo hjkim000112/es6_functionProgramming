@@ -20,10 +20,10 @@ const curry = (f) =>{ //처음 f 함수를 하나 받는다. (f함수 가지고 
     return (a, ..._)=>_.length ? f(a, ..._) : (..._)=>f(a, ..._);}
 
 const mult = curry((a,b)=>a*b);
-console.log(mult(1)(2));
+// console.log(mult(1)(2));
 
 const mult3 = mult(3);
-console.log(mult3(10));
+// console.log(mult3(10));
 
 
 
@@ -46,7 +46,9 @@ const products = [
     {name: '바지',price:25000},
 ]  
 
-const go = (...args) =>{
+
+
+const go = (...args) =>
     fx.reduce((acc,f)=> f(acc),args);  //f(acc)때 두번째 실행?
     //reduce에 args , 객체, 함수,함수,함수,함수 순으로 넣음
     //인자가 2개이기때문에 자동으로 처음에 넣은 값이 초기값이 됨.
@@ -54,22 +56,48 @@ const go = (...args) =>{
     //(acc,a) => a(acc)함수가 실행됨. a(acc)함수는 args의 함수들중 순서대로 하나씩 실행되는것을 가리킴
     //acc에는 객체가 들어있고 
     //filter(acc => acc.price < 20000) 이된다.
-};
+
 
 go(
     products, //초기값. 
-    fx.filter(p => {console.log('tests'); return p.price <20000}), //이때 첫번째 실행? 실행하고 인자로 넘겨지는건가.
+    // fx.filter(p => {console.log('tests'); return p.price <20000}), //이때 첫번째 실행? 실행하고 인자로 넘겨지는건가.
     fx.map(p =>p.price),
     fx.reduce(fx.add),
-    console.log
+    // console.log
 )
 
 
 // console.log(products,fx.filter(p=>p))
 // go(
 //     products, //초기값. 
-//     products => fx.filter(p => p.price <20000)(products),
+//     products => fx.filter(p => p.price <20000)(procuts),
 //     products => fx.map(p =>p.price)(products),
 //     price => fx.reduce(fx.add)(price),
 //     console.log
 // )
+
+
+/////중복 코드제거
+const pipe = (f,...fs) => (...as) => go(f(...as), ...fs);
+const add = (a,b) => a+b;
+//f-함수를 받고, ...함수리스트를 받고?
+//...as 인자를 받는 함수를 리턴한다. 
+//...as 인자 값을 이용해서 go 함수에서 초기값 설정 (첫번째 값이 )
+const total_price = pipe(
+    fx.map(p =>p.price),
+    fx.reduce(add)
+);
+
+go(
+    products, //초기값. 
+    fx.filter(p => p.price <20000), //이때 첫번째 실행? 실행하고 인자로 넘겨지는건가.
+    total_price,
+    console.log
+)
+
+go(
+    products, //초기값. 
+    fx.filter(p => p.price >= 20000), //이때 첫번째 실행? 실행하고 인자로 넘겨지는건가.
+    total_price,
+    console.log
+)
